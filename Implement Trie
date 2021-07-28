@@ -1,0 +1,75 @@
+/*
+A trie (pronounced as "try") or prefix tree is a tree data structure used to efficiently store and retrieve keys in a dataset of strings. There are various applications of this data structure, such as autocomplete and spellchecker.
+
+Implement the Trie class:
+
+Trie() Initializes the trie object.
+void insert(String word) Inserts the string word into the trie.
+boolean search(String word) Returns true if the string word is in the trie (i.e., was inserted before), and false otherwise.
+boolean startsWith(String prefix) Returns true if there is a previously inserted string word that has the prefix prefix, and false otherwise.
+*
+*/
+
+
+Solution:-
+
+class Trie {
+public:
+    
+    struct TrieNode
+    {
+        int wordend;
+        TrieNode *child[26];
+    };
+    TrieNode *root;
+    Trie() {
+         root=new TrieNode();
+    }
+    
+    /** Inserts a word into the trie. */
+    void insert(string word) {
+        
+        TrieNode *curr=root;
+        int index;
+        for(int i=0;i<word.size();i++)
+        {
+            index=word[i]-'a';
+            if(curr->child[index]==NULL)
+            {
+                curr->child[index]=new TrieNode();
+            }
+            curr=curr->child[index];
+        }
+        curr->wordend=1;
+    }
+    
+    /** Returns if the word is in the trie. */
+    bool search(string word) {
+        TrieNode *curr=root;
+        int index;
+        for(int i=0;i<word.size();i++)
+        {
+            index=word[i]-'a';
+            if(curr->child[index]==NULL)
+                return false;
+            
+            curr=curr->child[index];
+        }
+        return curr->wordend;
+    }
+    
+    /** Returns if there is any word in the trie that starts with the given prefix. */
+    bool startsWith(string prefix) {
+        TrieNode *curr=root;
+        int index;
+        for(int i=0;i<prefix.size();i++)
+        {
+            index=prefix[i]-'a';
+            if(curr->child[index]==NULL)
+                return false;
+            
+            curr=curr->child[index];
+        }
+        return true;
+    }
+};
