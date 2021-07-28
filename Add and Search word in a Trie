@@ -1,0 +1,77 @@
+/*
+Design a data structure that supports adding new words and finding if a string matches any previously added string.
+
+Implement the WordDictionary class:
+
+WordDictionary() Initializes the object.
+void addWord(word) Adds word to the data structure, it can be matched later.
+bool search(word) Returns true if there is any string in the data structure that matches word or false otherwise. word may contain dots '.' where dots can be matched with any letter.
+*
+*/
+
+
+Solution :-
+
+class WordDictionary {
+public:
+    struct TrieNode 
+    {
+        int we;
+        TrieNode *child[26];
+    };
+    TrieNode *root;
+    WordDictionary() {
+        root=new TrieNode();
+    }
+     bool searching(string s,TrieNode *curr,int index,int n)
+    {
+        if(s[index]=='.')
+        {
+            bool res=false;
+            TrieNode *current=curr;
+            for(int i=0;i<26;i++)
+            {
+                if(index==n-1 && curr->child[i]!=NULL)
+                {
+                    current=curr->child[i];
+                   res = current->we;
+                }
+                else if(curr->child[i]!=NULL && searching(s,curr->child[i],index+1,n))
+                {
+                    return true;
+                }
+            }
+            return res;
+        }
+        else if(curr->child[s[index]-'a'])
+        {
+            if(index==n-1)
+            {
+                curr=curr->child[s[index]-'a'];
+                return curr->we;
+            }
+            return searching(s,curr->child[s[index]-'a'],index+1,n);
+        }
+        return false;
+    }
+    
+    void addWord(string word) {
+        int index=0;
+        TrieNode *curr=root;
+        for(int i=0;i<word.size();i++)
+        {
+            index=word[i]-'a';
+            if(curr->child[index]==NULL)
+            {
+                curr->child[index]=new TrieNode();
+            }
+            curr=curr->child[index];
+        }
+        curr->we=1;
+    }
+   
+    bool search(string word) {
+        int n=word.size();
+        return searching(word,root,0,n);
+    }
+};
